@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BearBeard.iml" filepath="$PROJECT_DIR$/BearBeard.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camera_view_library/camera_view_library.iml" filepath="$PROJECT_DIR$/camera_view_library/camera_view_library.iml" />
     </modules>
   </component>
 </project>
