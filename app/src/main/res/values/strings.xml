@@ -8,4 +8,8 @@
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
     <string name="refresh">Refresh</string>
+    <string name="upload_1">Man2Woman</string>
+    <string name="upload_2">Woman2Man</string>
+    <string name="gallery">Gallery</string>
+    <string name="share">Share</string>
 </resources>

@@ -53,9 +53,9 @@ public class Uploader {
 
         Log.d(TAG, "uploadFile file: " + file.getPath());
         //Convert bitmap to byte array
-        Bitmap bitmap = PictureUtils.getScaledBitmap(file.getPath(),50, 50);
+        Bitmap bitmap = PictureUtils.getScaledBitmap(file.getPath(),100, 100);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         final byte[] imageBytes = baos.toByteArray();
 
         uploadFile(imageBytes, uploadListener);

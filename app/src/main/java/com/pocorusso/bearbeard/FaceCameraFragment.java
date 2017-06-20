@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.android.cameraview.CameraView;
@@ -31,10 +32,14 @@ public class FaceCameraFragment extends Fragment {
     private CameraView mCameraView;
     private FloatingActionButton mBtnTakePicture;
     private ImageView mImageViewResult;
-
+    private Toolbar mToolbarBottom;
     private Handler mBackgroundHandler;
+    private ImageButton mBtnGallery;
+    private ImageButton mBtnUpload1;
+    private ImageButton mBtnUpload2;
 
     private int mCurrentFlash;
+    private File mFile;
 
     private static final int[] FLASH_OPTIONS = {
             CameraView.FLASH_AUTO,
@@ -64,6 +69,8 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_face_camera, container, false);
+
+
         mCameraView = (CameraView) v.findViewById(R.id.camera);
         mCameraView.addCallback(mCameraCallback);
 
@@ -79,12 +86,49 @@ public class FaceCameraFragment extends Fragment {
             }
         });
 
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        //top tool bar
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.camera_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
+
+        mToolbarBottom = (Toolbar)v.findViewById(R.id.bottom_toolbar);
+        mBtnGallery = (ImageButton)v.findViewById(R.id.open_gallery);
+        mBtnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //set up galery open
+            }
+        });
+
+        mBtnUpload1 = (ImageButton)v.findViewById(R.id.item_upload_1);
+        mBtnUpload1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(mFile, new Uploader.UploadListener() {
+                    @Override
+                    public void onUploaded(Bitmap bitmap) {
+                        mImageViewResult.setImageBitmap(bitmap);
+                        mImageViewResult.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onUploadError() {
+                        //todo handle upload error
+                    }
+                });
+            }
+        });
+
+        mBtnUpload2 = (ImageButton)v.findViewById(R.id.item_upload_2);
+        mBtnUpload2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //todo set up second upload
+            }
+        });
 
         return v;
     }
@@ -92,7 +136,7 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.camera, menu);
     }
 
     @Override
@@ -178,19 +222,7 @@ public class FaceCameraFragment extends Fragment {
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
-                    File file = PictureUtils.savePictureInPrivateStorage(getActivity(), data);
-                    Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(data, new Uploader.UploadListener() {
-                        @Override
-                        public void onUploaded(Bitmap bitmap) {
-
-                        }
-
-                        @Override
-                        public void onUploadError() {
-
-                        }
-                    });
-
+                    mFile = PictureUtils.savePictureInPrivateStorage(getActivity(), data);
                 }
             });
         }
