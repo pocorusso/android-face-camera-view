@@ -36,7 +36,8 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="26dp"
         app:srcCompat="@drawable/ic_camera"
         app:useCompatPadding="true"/>
 
@@ -49,12 +50,11 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/bottom_toolbar"
+        style="@style/FaceCameraBottomToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/primary_light"
-        android:elevation="4dp">
+        android:layout_alignParentStart="true">
 
 
         <ImageButton
@@ -80,7 +80,6 @@
             android:layout_height="?attr/actionBarSize"
             android:text="@string/upload_2"
             app:srcCompat="@drawable/ic_upload_2"/>
-
 
     </android.support.v7.widget.Toolbar>
 

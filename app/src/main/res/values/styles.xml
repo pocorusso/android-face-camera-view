@@ -13,4 +13,9 @@
     <style name="FaceCameraImageButtonStyle" parent="@style/Widget.AppCompat.ImageButton">
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
+
+    <style name="FaceCameraBottomToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/primary_light</item>
+        <item name="android:elevation">4dp</item>
+    </style>
 </resources>
