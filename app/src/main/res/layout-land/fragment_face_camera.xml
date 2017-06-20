@@ -100,7 +100,14 @@
             android:text="@string/upload_2"
             app:srcCompat="@drawable/ic_upload_2"/>
 
-
     </android.support.v7.widget.Toolbar>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

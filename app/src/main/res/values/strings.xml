@@ -12,4 +12,5 @@
     <string name="upload_2">Woman2Man</string>
     <string name="gallery">Gallery</string>
     <string name="share">Share</string>
+    <string name="failed_upload">Failed to transform face.</string>
 </resources>

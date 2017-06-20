@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
 
@@ -38,6 +40,7 @@ public class FaceCameraFragment extends Fragment {
     private ImageButton mBtnGallery;
     private ImageButton mBtnUpload1;
     private ImageButton mBtnUpload2;
+    private ProgressBar mProgressBar;
 
     private Handler mBackgroundHandler;
     private int mCurrentFlash;
@@ -94,6 +97,7 @@ public class FaceCameraFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mCameraView != null) {
+                    mProgressBar.setVisibility(View.VISIBLE);
                     mCameraView.takePicture();
                 }
             }
@@ -107,7 +111,7 @@ public class FaceCameraFragment extends Fragment {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        mBtnGallery = (ImageButton)v.findViewById(R.id.btn_open_gallery);
+        mBtnGallery = (ImageButton) v.findViewById(R.id.btn_open_gallery);
         mBtnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,32 +119,64 @@ public class FaceCameraFragment extends Fragment {
             }
         });
 
-        mBtnUpload1 = (ImageButton)v.findViewById(R.id.btn_upload_1);
+        mBtnUpload1 = (ImageButton) v.findViewById(R.id.btn_upload_1);
         mBtnUpload1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mProgressBar.setVisibility(View.VISIBLE);
+
                 Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(mFile, new Uploader.UploadListener() {
                     @Override
                     public void onUploaded(Bitmap bitmap) {
-                       setUiState(UiState.FINISHED_UPLOAD);
-                       mImageViewUploadResult.setImageBitmap(bitmap);
+                        setUiState(UiState.FINISHED_UPLOAD);
+                        mImageViewUploadResult.setImageBitmap(bitmap);
+                        mProgressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onUploadError() {
                         //todo handle upload error
+                        mProgressBar.setVisibility(View.GONE);
+                        Toast toast = Toast.makeText(getActivity()
+                                , getString(R.string.failed_upload)
+                                , Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 });
             }
         });
 
-        mBtnUpload2 = (ImageButton)v.findViewById(R.id.btn_upload_2);
+        mBtnUpload2 = (ImageButton) v.findViewById(R.id.btn_upload_2);
         mBtnUpload2.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 //todo set up second upload
+                mProgressBar.setVisibility(View.VISIBLE);
+
+                Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(mFile, new Uploader.UploadListener() {
+                    @Override
+                    public void onUploaded(Bitmap bitmap) {
+                        setUiState(UiState.FINISHED_UPLOAD);
+                        mImageViewUploadResult.setImageBitmap(bitmap);
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onUploadError() {
+                        //todo handle upload error
+                        mProgressBar.setVisibility(View.GONE);
+                        Toast toast = Toast.makeText(getActivity()
+                                , getString(R.string.failed_upload)
+                                , Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
             }
         });
+
+        mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
         setUiState(UiState.TAKE_PICTURE);
         return v;
@@ -227,6 +263,7 @@ public class FaceCameraFragment extends Fragment {
 
             setUiState(UiState.PREPARE_UPLOAD);
             mImageViewCaptureResult.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
+            mProgressBar.setVisibility(View.GONE);
 
             getBackgroundHandler().post(new Runnable() {
                 @Override
@@ -247,7 +284,7 @@ public class FaceCameraFragment extends Fragment {
     }
 
     private void setUiState(UiState state) {
-        switch(state) {
+        switch (state) {
             case TAKE_PICTURE:
                 mBtnTakePicture.setClickable(true);
                 mBtnTakePicture.setVisibility(View.VISIBLE);
@@ -264,6 +301,7 @@ public class FaceCameraFragment extends Fragment {
                 mImageViewCaptureResult.setVisibility(View.GONE);
                 mImageViewUploadResult.setVisibility(View.GONE);
 
+                mProgressBar.setVisibility(View.GONE);
                 break;
             case PREPARE_UPLOAD:
                 mBtnRefresh.setClickable(true);
