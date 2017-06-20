@@ -11,13 +11,33 @@
 
     <com.google.android.cameraview.CameraView
         android:id="@+id/camera"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
+        android:layout_above="@+id/bottom_toolbar"
         android:background="@color/primary_dark"/>
+
+    <ImageView
+        android:id="@+id/capture_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="false"
+        android:visibility="visible"
+        app:srcCompat="@color/accent"/>
+
+    <ImageView
+        android:id="@+id/upload_result"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="visible"
+        app:srcCompat="@color/accent"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/camera_toolbar"
@@ -39,14 +59,6 @@
         app:useCompatPadding="true"
         tools:ignore="RelativeOverlap"/>
 
-    <ImageView
-        android:id="@+id/image_view_result"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:visibility="gone"
-        app:srcCompat="@color/accent"/>
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/bottom_toolbar"
         style="@style/FaceCameraBottomToolbarStyle"
@@ -57,7 +69,7 @@
         android:layout_alignParentEnd="true">
 
         <ImageButton
-            android:id="@+id/open_gallery"
+            android:id="@+id/btn_open_gallery"
             style="@style/FaceCameraImageButtonStyle"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
@@ -65,7 +77,15 @@
             app:srcCompat="@drawable/ic_gallery"/>
 
         <ImageButton
-            android:id="@+id/item_upload_1"
+            android:id="@+id/btn_refresh"
+            style="@style/FaceCameraImageButtonStyle"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:text="@string/refresh"
+            app:srcCompat="@drawable/ic_refresh"/>
+
+        <ImageButton
+            android:id="@+id/btn_upload_1"
             style="@style/FaceCameraImageButtonStyle"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
@@ -73,7 +93,7 @@
             app:srcCompat="@drawable/ic_upload_1"/>
 
         <ImageButton
-            android:id="@+id/item_upload_2"
+            android:id="@+id/btn_upload_2"
             style="@style/FaceCameraImageButtonStyle"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"

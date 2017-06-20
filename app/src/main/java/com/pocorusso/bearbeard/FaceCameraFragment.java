@@ -26,18 +26,20 @@ import com.google.android.cameraview.CameraView;
 
 import java.io.File;
 
+
 public class FaceCameraFragment extends Fragment {
     private static String TAG = "FaceCameraFragment";
 
     private CameraView mCameraView;
     private FloatingActionButton mBtnTakePicture;
-    private ImageView mImageViewResult;
-    private Toolbar mToolbarBottom;
-    private Handler mBackgroundHandler;
+    private ImageView mImageViewUploadResult;
+    private ImageView mImageViewCaptureResult;
+    private ImageButton mBtnRefresh;
     private ImageButton mBtnGallery;
     private ImageButton mBtnUpload1;
     private ImageButton mBtnUpload2;
 
+    private Handler mBackgroundHandler;
     private int mCurrentFlash;
     private File mFile;
 
@@ -63,6 +65,7 @@ public class FaceCameraFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Nullable
@@ -74,7 +77,17 @@ public class FaceCameraFragment extends Fragment {
         mCameraView = (CameraView) v.findViewById(R.id.camera);
         mCameraView.addCallback(mCameraCallback);
 
-        mImageViewResult = (ImageView) v.findViewById(R.id.image_view_result);
+        mImageViewCaptureResult = (ImageView) v.findViewById(R.id.capture_result);
+
+        mImageViewUploadResult = (ImageView) v.findViewById(R.id.upload_result);
+
+        mBtnRefresh = (ImageButton) v.findViewById(R.id.btn_refresh);
+        mBtnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setUiState(UiState.TAKE_PICTURE);
+            }
+        });
 
         mBtnTakePicture = (FloatingActionButton) v.findViewById(R.id.take_picture);
         mBtnTakePicture.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +107,7 @@ public class FaceCameraFragment extends Fragment {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        mToolbarBottom = (Toolbar)v.findViewById(R.id.bottom_toolbar);
-        mBtnGallery = (ImageButton)v.findViewById(R.id.open_gallery);
+        mBtnGallery = (ImageButton)v.findViewById(R.id.btn_open_gallery);
         mBtnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,15 +115,15 @@ public class FaceCameraFragment extends Fragment {
             }
         });
 
-        mBtnUpload1 = (ImageButton)v.findViewById(R.id.item_upload_1);
+        mBtnUpload1 = (ImageButton)v.findViewById(R.id.btn_upload_1);
         mBtnUpload1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(mFile, new Uploader.UploadListener() {
                     @Override
                     public void onUploaded(Bitmap bitmap) {
-                        mImageViewResult.setImageBitmap(bitmap);
-                        mImageViewResult.setVisibility(View.VISIBLE);
+                       setUiState(UiState.FINISHED_UPLOAD);
+                       mImageViewUploadResult.setImageBitmap(bitmap);
                     }
 
                     @Override
@@ -122,7 +134,7 @@ public class FaceCameraFragment extends Fragment {
             }
         });
 
-        mBtnUpload2 = (ImageButton)v.findViewById(R.id.item_upload_2);
+        mBtnUpload2 = (ImageButton)v.findViewById(R.id.btn_upload_2);
         mBtnUpload2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +142,7 @@ public class FaceCameraFragment extends Fragment {
             }
         });
 
+        setUiState(UiState.TAKE_PICTURE);
         return v;
     }
 
@@ -176,10 +189,6 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh:
-                mImageViewResult.setVisibility(View.GONE);
-
-                return true;
             case R.id.switch_flash:
                 if (mCameraView != null) {
                     mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;
@@ -216,8 +225,8 @@ public class FaceCameraFragment extends Fragment {
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
 
-            mImageViewResult.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
-            mImageViewResult.setVisibility(View.VISIBLE);
+            setUiState(UiState.PREPARE_UPLOAD);
+            mImageViewCaptureResult.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
 
             getBackgroundHandler().post(new Runnable() {
                 @Override
@@ -225,6 +234,72 @@ public class FaceCameraFragment extends Fragment {
                     mFile = PictureUtils.savePictureInPrivateStorage(getActivity(), data);
                 }
             });
+
+
         }
     };
+
+
+    private static enum UiState {
+        TAKE_PICTURE,
+        PREPARE_UPLOAD,
+        FINISHED_UPLOAD
+    }
+
+    private void setUiState(UiState state) {
+        switch(state) {
+            case TAKE_PICTURE:
+                mBtnTakePicture.setClickable(true);
+                mBtnTakePicture.setVisibility(View.VISIBLE);
+
+                mBtnRefresh.setClickable(false);
+                mBtnRefresh.setVisibility(View.INVISIBLE);
+
+                mBtnUpload1.setClickable(false);
+                mBtnUpload1.setVisibility(View.INVISIBLE);
+
+                mBtnUpload2.setClickable(false);
+                mBtnUpload2.setVisibility(View.INVISIBLE);
+
+                mImageViewCaptureResult.setVisibility(View.GONE);
+                mImageViewUploadResult.setVisibility(View.GONE);
+
+                break;
+            case PREPARE_UPLOAD:
+                mBtnRefresh.setClickable(true);
+                mBtnRefresh.setVisibility(View.VISIBLE);
+
+                mBtnTakePicture.setClickable(false);
+                mBtnTakePicture.setVisibility(View.INVISIBLE);
+
+                mBtnUpload1.setClickable(true);
+                mBtnUpload1.setVisibility(View.VISIBLE);
+
+                mBtnUpload2.setClickable(true);
+                mBtnUpload2.setVisibility(View.VISIBLE);
+
+                mImageViewCaptureResult.setVisibility(View.VISIBLE);
+                mImageViewUploadResult.setVisibility(View.INVISIBLE);
+
+                break;
+            case FINISHED_UPLOAD:
+                mBtnRefresh.setClickable(true);
+                mBtnRefresh.setVisibility(View.VISIBLE);
+
+                mBtnTakePicture.setClickable(false);
+                mBtnTakePicture.setVisibility(View.INVISIBLE);
+
+                mBtnUpload1.setClickable(true);
+                mBtnUpload1.setVisibility(View.VISIBLE);
+
+                mBtnUpload2.setClickable(true);
+                mBtnUpload2.setVisibility(View.VISIBLE);
+
+                mImageViewCaptureResult.setVisibility(View.VISIBLE);
+                mImageViewUploadResult.setVisibility(View.VISIBLE);
+
+            default:
+                //do nothing
+        }
+    }
 }
