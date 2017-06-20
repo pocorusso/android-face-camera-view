@@ -6,7 +6,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/primary"
     tools:context=".FaceCameraActivity">
 
     <com.google.android.cameraview.CameraView
@@ -17,7 +17,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
-        android:background="@android:color/black"/>
+        android:background="@color/primary_dark"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -44,6 +44,6 @@
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
         android:visibility="gone"
-        app:srcCompat="@color/colorAccent"/>
+        app:srcCompat="@color/accent"/>
 
 </RelativeLayout>
