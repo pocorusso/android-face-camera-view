@@ -9,15 +9,30 @@
     android:background="@color/colorPrimary"
     tools:context=".FaceCameraActivity">
 
-    <com.google.android.cameraview.CameraView
-        android:id="@+id/camera"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:background="@android:color/black"/>
+        android:layout_above="@+id/take_picture">
+
+        <com.google.android.cameraview.CameraView
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:background="@android:color/black"/>
+
+        <ImageView
+            android:id="@+id/image_view_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:adjustViewBounds="true"
+            app:srcCompat="@color/colorAccent"
+            android:scaleType="centerCrop"/>
+
+    </FrameLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -35,14 +50,6 @@
         android:layout_centerHorizontal="true"
         app:srcCompat="@drawable/ic_camera"
         app:useCompatPadding="true"/>
-
-    <ImageView
-        android:id="@+id/image_view_result"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:visibility="gone"
-        app:srcCompat="@color/colorAccent"/>
 
 </RelativeLayout>
 

@@ -1,6 +1,7 @@
 package com.pocorusso.bearbeard;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -131,7 +132,10 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.refresh:
+                mImageViewResult.setVisibility(View.GONE);
 
+                return true;
             case R.id.switch_flash:
                 if (mCameraView != null) {
                     mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;
@@ -167,6 +171,10 @@ public class FaceCameraFragment extends Fragment {
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
+
+            mImageViewResult.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
+            mImageViewResult.setVisibility(View.VISIBLE);
+
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
@@ -174,8 +182,7 @@ public class FaceCameraFragment extends Fragment {
                     Uploader.getInstance(getActivity().getApplicationContext()).uploadFile(data, new Uploader.UploadListener() {
                         @Override
                         public void onUploaded(Bitmap bitmap) {
-                            mImageViewResult.setImageBitmap(bitmap);
-                            mImageViewResult.setVisibility(View.VISIBLE);
+
                         }
 
                         @Override
