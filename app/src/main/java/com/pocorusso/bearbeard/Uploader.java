@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+
 public class Uploader {
 
     public interface UploadListener {
@@ -23,7 +24,7 @@ public class Uploader {
     }
 
     private static String TAG = "Uploader";
-    private static String URL = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/w2m";
+
     private static Uploader mInstance;
     private RequestQueue mQueue;
 
@@ -48,7 +49,7 @@ public class Uploader {
         mQueue.cancelAll(TAG);
     }
 
-    public void uploadFile(File file, final UploadListener uploadListener){
+    public void uploadFile(File file, final UploadListener uploadListener, final String url){
         if (file == null) return;
 
         Log.d(TAG, "uploadFile file: " + file.getPath());
@@ -58,11 +59,11 @@ public class Uploader {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         final byte[] imageBytes = baos.toByteArray();
 
-        uploadFile(imageBytes, uploadListener);
+        uploadFile(imageBytes, uploadListener, url);
     }
-    public void uploadFile(final byte[] data, final UploadListener uploadListener) {
+    public void uploadFile(final byte[] data, final UploadListener uploadListener, final String url) {
 
-        ImageRequest postRequest = new ImageRequest(URL,
+        ImageRequest postRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {

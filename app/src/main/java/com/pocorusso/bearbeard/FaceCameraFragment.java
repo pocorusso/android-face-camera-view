@@ -30,8 +30,10 @@ import java.io.File;
 
 
 public class FaceCameraFragment extends Fragment {
-    private static String TAG = "FaceCameraFragment";
+    private final static String TAG = "FaceCameraFragment";
 
+    private final static String URL1 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/w2m";
+    private final static String URL2 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/m2w";
     private CameraView mCameraView;
     private FloatingActionButton mBtnTakePicture;
     private ImageView mImageViewUploadResult;
@@ -143,7 +145,7 @@ public class FaceCameraFragment extends Fragment {
                                 , Toast.LENGTH_LONG);
                         toast.show();
                     }
-                });
+                }, URL1);
             }
         });
 
@@ -172,7 +174,7 @@ public class FaceCameraFragment extends Fragment {
                                 , Toast.LENGTH_LONG);
                         toast.show();
                     }
-                });
+                }, URL2);
             }
         });
 
