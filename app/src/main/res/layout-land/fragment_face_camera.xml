@@ -66,28 +66,25 @@
 
             <ImageButton
                 android:id="@+id/open_gallery"
-                style="@style/Widget.AppCompat.ImageButton"
+                style="@style/FaceCameraImageButtonStyle"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="@string/gallery"
                 app:srcCompat="@drawable/ic_gallery"/>
 
             <ImageButton
                 android:id="@+id/item_upload_1"
-                style="@style/Widget.AppCompat.ImageButton"
+                style="@style/FaceCameraImageButtonStyle"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="@string/upload_1"
                 app:srcCompat="@drawable/ic_upload_1"/>
 
             <ImageButton
                 android:id="@+id/item_upload_2"
-                style="@style/Widget.AppCompat.ImageButton"
+                style="@style/FaceCameraImageButtonStyle"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="@string/upload_2"
                 app:srcCompat="@drawable/ic_upload_2"/>
         </LinearLayout>
