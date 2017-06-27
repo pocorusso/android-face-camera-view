@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,7 @@ import java.io.File;
 public class FaceCameraFragment extends Fragment {
     private final static String TAG = "FaceCameraFragment";
 
+    private GalleryDecorator mGalleryDecorator;
     private final static String URL1 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/w2m";
     private final static String URL2 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/m2w";
     private CameraView mCameraView;
@@ -43,6 +45,7 @@ public class FaceCameraFragment extends Fragment {
     private ImageButton mBtnUpload1;
     private ImageButton mBtnUpload2;
     private ProgressBar mProgressBar;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     private Handler mBackgroundHandler;
     private int mCurrentFlash;
@@ -70,7 +73,7 @@ public class FaceCameraFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        mGalleryDecorator = new GalleryDecorator(getActivity());
     }
 
     @Nullable
@@ -181,6 +184,11 @@ public class FaceCameraFragment extends Fragment {
         mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
         setUiState(UiState.TAKE_PICTURE);
+
+        View bottomSheet = v.findViewById( R.id.bottom_sheet );
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        mGalleryDecorator.onCreateView(v);
         return v;
     }
 
@@ -203,6 +211,12 @@ public class FaceCameraFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mGalleryDecorator.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mBackgroundHandler != null) {
@@ -213,6 +227,8 @@ public class FaceCameraFragment extends Fragment {
             }
             mBackgroundHandler = null;
         }
+
+        mGalleryDecorator.onDestroy();
     }
 
     private Handler getBackgroundHandler() {
