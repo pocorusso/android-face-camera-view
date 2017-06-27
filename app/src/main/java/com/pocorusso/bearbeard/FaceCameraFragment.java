@@ -34,7 +34,7 @@ import java.io.File;
 public class FaceCameraFragment extends Fragment {
     private final static String TAG = "FaceCameraFragment";
 
-    private GalleryDecorator mGalleryDecorator;
+    private GalleryManager mGalleryManager;
     private final static String URL1 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/w2m";
     private final static String URL2 = "http://ec2-34-250-78-232.eu-west-1.compute.amazonaws.com/m2w";
     private CameraView mCameraView;
@@ -74,7 +74,7 @@ public class FaceCameraFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mGalleryDecorator = new GalleryDecorator(getActivity(), new GalleryDecorator.PhotoOnClickListener() {
+        mGalleryManager = new GalleryManager(getActivity(), new GalleryManager.PhotoOnClickListener() {
             @Override
             public void onClick(Uri uri) {
                 //close the gallery
@@ -94,7 +94,7 @@ public class FaceCameraFragment extends Fragment {
 
 
         mCameraView = (CameraView) v.findViewById(R.id.camera);
-        mCameraView.addCallback(mCameraCallback);git
+        mCameraView.addCallback(mCameraCallback);
 
         mImageViewCaptureResult = (ImageView) v.findViewById(R.id.capture_result);
 
@@ -200,7 +200,7 @@ public class FaceCameraFragment extends Fragment {
         View bottomSheet = v.findViewById( R.id.bottom_sheet );
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
-        mGalleryDecorator.onCreateView(v);
+        mGalleryManager.onCreateView(v);
         return v;
     }
 
@@ -225,7 +225,7 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mGalleryDecorator.onDestroyView();
+        mGalleryManager.onDestroyView();
     }
 
     @Override
@@ -240,7 +240,7 @@ public class FaceCameraFragment extends Fragment {
             mBackgroundHandler = null;
         }
 
-        mGalleryDecorator.onDestroy();
+        mGalleryManager.onDestroy();
     }
 
     private Handler getBackgroundHandler() {

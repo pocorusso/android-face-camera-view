@@ -17,20 +17,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 
-public class GalleryDecorator {
+public class GalleryManager {
 
     interface PhotoOnClickListener{
         void onClick(Uri uri);
     }
 
-    private static final String TAG = "GalleryDecorator";
+    private static final String TAG = "GalleryManager";
 
     private Context mContext;
     private PhotoOnClickListener mOnClickListener;
     private RecyclerView mRecyclerView;
     private ThumbnailDownloader<PhotoHolder> mThumbnailDownloader;
 
-    public GalleryDecorator(Context context, PhotoOnClickListener listener) {
+    public GalleryManager(Context context, PhotoOnClickListener listener) {
         mContext = context;
         mOnClickListener = listener;
 
