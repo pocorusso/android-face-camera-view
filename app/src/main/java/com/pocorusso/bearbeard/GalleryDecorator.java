@@ -15,17 +15,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
+
 
 public class GalleryDecorator {
+
+    interface PhotoOnClickListener{
+        void onClick(Uri uri);
+    }
+
     private static final String TAG = "GalleryDecorator";
 
     private Context mContext;
+    private PhotoOnClickListener mOnClickListener;
     private RecyclerView mRecyclerView;
     private ThumbnailDownloader<PhotoHolder> mThumbnailDownloader;
 
-    public GalleryDecorator(Context context) {
+    public GalleryDecorator(Context context, PhotoOnClickListener listener) {
         mContext = context;
+        mOnClickListener = listener;
 
         //handler for UI thread operation in response to the result of bitmap decoding
         Handler responseHandler = new Handler();
@@ -136,9 +143,12 @@ public class GalleryDecorator {
             PhotoHolder holder = (PhotoHolder) view.getTag();
             if (holder != null && holder.mGalleryItem!=null) {
                 int id = holder.mGalleryItem.getId();
-                //TODO handle on click action here
-                Toast.makeText(mContext, "Item clicked: " + id, Toast.LENGTH_SHORT).show();
+
+                mOnClickListener.onClick(holder.mGalleryItem.getUri());
+
             }
+
+
         }
     }
 

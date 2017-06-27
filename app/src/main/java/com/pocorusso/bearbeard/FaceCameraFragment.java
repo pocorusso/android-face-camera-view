@@ -2,6 +2,7 @@ package com.pocorusso.bearbeard;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,7 +74,17 @@ public class FaceCameraFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mGalleryDecorator = new GalleryDecorator(getActivity());
+        mGalleryDecorator = new GalleryDecorator(getActivity(), new GalleryDecorator.PhotoOnClickListener() {
+            @Override
+            public void onClick(Uri uri) {
+                //close the gallery
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                Bitmap bitmap = BitmapFactory.decodeFile(uri.getPath());
+                mImageViewCaptureResult.setImageBitmap(bitmap);
+                setUiState(UiState.PREPARE_UPLOAD);
+                mFile = new File(uri.getPath());
+            }
+        });
     }
 
     @Nullable
@@ -83,7 +94,7 @@ public class FaceCameraFragment extends Fragment {
 
 
         mCameraView = (CameraView) v.findViewById(R.id.camera);
-        mCameraView.addCallback(mCameraCallback);
+        mCameraView.addCallback(mCameraCallback);git
 
         mImageViewCaptureResult = (ImageView) v.findViewById(R.id.capture_result);
 
@@ -94,6 +105,7 @@ public class FaceCameraFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 setUiState(UiState.TAKE_PICTURE);
+                mFile = null;
             }
         });
 
