@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -21,7 +22,7 @@ public final class ThumbnailDownloader<T> extends HandlerThread {
     private Handler mRequestHandler;
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();
     private Handler mResponseHandler;
-    private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
+    private WeakReference<ThumbnailDownloadListener<T>> mThumbnailDownloadListener; //weakreference to prevent memory leak
     private LruCache<String, Bitmap> mBitmapCache;
 
     public interface ThumbnailDownloadListener<T> {
@@ -29,7 +30,7 @@ public final class ThumbnailDownloader<T> extends HandlerThread {
     }
 
     public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {
-        mThumbnailDownloadListener = listener;
+        mThumbnailDownloadListener = new WeakReference<ThumbnailDownloadListener<T>>(listener);
     }
 
     public ThumbnailDownloader(Handler responseHandler) {
@@ -69,7 +70,10 @@ public final class ThumbnailDownloader<T> extends HandlerThread {
                     }
 
                     mRequestMap.remove(target);
-                    mThumbnailDownloadListener.onThumbnailDownloaded(target, url, returnBitmap);
+                    ThumbnailDownloadListener<T> listener = mThumbnailDownloadListener.get();
+                    if(listener != null) {
+                        listener.onThumbnailDownloaded(target, url, returnBitmap);
+                    }
                 }
             });
         }
@@ -96,6 +100,7 @@ public final class ThumbnailDownloader<T> extends HandlerThread {
 
     @Override
     public boolean quit() {
+        //release the referece to the listener
         mHasQuit = true;
         return super.quit();
     }

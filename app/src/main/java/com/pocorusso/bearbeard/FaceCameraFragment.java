@@ -73,6 +73,7 @@ public class FaceCameraFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         setHasOptionsMenu(true);
         mGalleryManager = new GalleryManager(getActivity(), new GalleryManager.PhotoOnClickListener() {
             @Override
