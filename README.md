@@ -1,6 +1,7 @@
 # android-face-camera-view
 
 An android app for testing a face change api with a gallery bottom sheet. This is built with Material Design in mind. The app uses com.google.camera-view https://github.com/google/cameraview to access the camera hardware. 
+(I also did another project that uses Camera1 with a surfaceview https://github.com/pocorusso/android-custom-surface-view-camera. This might come in handy if we have really old phones.)
 
 The Face Change API is an api implemented by cpury (https://github.com/cpury) where given an image with a face, it returns
 female-fied or male-fied version. It is based on Circular Generative Adversarial Networks (CGAN).
